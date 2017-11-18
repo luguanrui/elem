@@ -116,3 +116,9 @@ v-bind:class="表达式"
 	    <div class="text"></div>
 	    <div class="line"></div>
 	  </div>
+	  
+## vue 动画
+
+ vue1.0与2.0的变化
+ 
+ 模态框的模糊背景：backdrop-filter:blur(10px),只在ios上能实现 

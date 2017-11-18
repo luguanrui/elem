@@ -30,7 +30,7 @@
       <img :src="seller.avatar" alt="" width="100%" height="100%">
     </div>
     <div v-show="detailShow" class="detail">
-      <div class="detaill-wrapper clearfix">
+      <div class="detail-wrapper clearfix">
         <div class="detail-main">
           <h1 class="name">{{seller.name}}</h1>
           <div class="star-wrapper">
@@ -57,7 +57,7 @@
           </div>
         </div>
       </div>
-      <div class="detail-close">
+      <div class="detail-close" @click="hideDetail">
         <i class="icon-close"></i>
       </div>
     </div>
@@ -75,12 +75,16 @@
     },
     data() {
       return {
-        detailShow: true
+        detailShow: false
       }
     },
     methods: {
       showDetail() {
         this.detailShow = true
+      },
+      // close商品信息的模态框
+      hideDetail(){
+        this.detailShow = false
       }
     },
     created() {
@@ -213,7 +217,8 @@
       height: 100%
       overflow: auto
       background: rgba(7, 17, 27, 0.8)
-    .detaill-wrapper
+      backdrop-filter:blur(10px)
+    .detail-wrapper
       min-height: 100%
       width: 100%
       .detail-main
