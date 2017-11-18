@@ -47,61 +47,62 @@
 
 <script type="text/ecmascript-6">
   import star from 'components/star/star'
-  export default{
-      props:{
-          seller:{
-              type:Object
-          }
-      },
-      data(){
-          return{
-            detailShow:true
-          }
-      },
-      methods:{
-        showDetail(){
-            this.detailShow = true
-        }
-      },
-      created(){
-          this.classMap = ['decrease','discount','special','invoice','guarantee']
-      },
-      components:{
-        star
+
+  export default {
+    props: {
+      seller: {
+        type: Object
       }
+    },
+    data() {
+      return {
+        detailShow: true
+      }
+    },
+    methods: {
+      showDetail() {
+        this.detailShow = true
+      }
+    },
+    created() {
+      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+    },
+    components: {
+      star
+    }
   }
 </script>
 
 <style lang="stylus">
   @import "../../common/stylus/mixin.styl"
   .header
-    position :relative
-    overflow :hidden
+    position: relative
+    overflow: hidden
     color: #fff
-    background:rgba(7,17,27,0.3)
+    background: rgba(7, 17, 27, 0.3)
     .content-wrap
       position: relative
       padding: 24px 16px 18px 24px
-      font-size:0
+      font-size: 0
       .avatar
         display: inline-block
         vertical-align: top
-        &>img
+        & > img
           display: block
-          border-radius:2px
+          border-radius: 2px
       .content
-        display:inline-block
+        display: inline-block
         margin-left: 16px
         .title
-          margin:2px 0 8px 0
+          margin: 2px 0 8px 0
           .brand
             display: inline-block
-            width:30px
+            width: 30px
             height: 18px
             bg-image('brand')
             background-size: 30px 18px
-            background-repeat:no-repeat
-            vertical-align:top
+            background-repeat: no-repeat
+            vertical-align: top
           .name
             margin-left: 6px
             font-size: 16px
@@ -112,13 +113,13 @@
           margin-bottom: 10px
         .supports
           .icon
-            display:inline-block
+            display: inline-block
             vertical-align: top
             width: 12px
             height: 12px
             margin-right: 4px
             background-size: 12px 12px
-            background-repeat:no-repeat
+            background-repeat: no-repeat
             &.decrease
               bg-image('decrease_1')
             &.discount
@@ -138,82 +139,82 @@
         bottom: 14px
         padding: 0 8px
         height: 24px
-        line-height :24px
-        border-radius :14px
-        background :rgba(0,0,0,0.2)
-        text-align :center
+        line-height: 24px
+        border-radius: 14px
+        background: rgba(0, 0, 0, 0.2)
+        text-align: center
         .count
-          vertical-align :top
-          font-size :10px
+          vertical-align: top
+          font-size: 10px
         .icon-keyboard_arrow_right
-          margin-left :2px
-          line-height :24px
+          margin-left: 2px
+          line-height: 24px
           font-size: 10px
     .bulletin-wrap
-      position :relative
+      position: relative
       height: 28px
-      line-height :28px
-      padding :0 22px 0 12px
-      white-space :nowrap
-      overflow :hidden
+      line-height: 28px
+      padding: 0 22px 0 12px
+      white-space: nowrap
+      overflow: hidden
       text-overflow ellipsis
-      background :rgba(7,17,27,0.2)
+      background: rgba(7, 17, 27, 0.2)
       .bulletin-title
-        vertical-align :top
-        display:inline-block
-        margin-top:8px
+        vertical-align: top
+        display: inline-block
+        margin-top: 8px
         width: 22px
-        height:12px
+        height: 12px
         bg-image('bulletin')
-        background-size:22px 12px
-        background-repeat:no-repeat
+        background-size: 22px 12px
+        background-repeat: no-repeat
       .bulletin-text
-        vertical-align :top
+        vertical-align: top
         margin: 0 4px
-        font-size :10px
+        font-size: 10px
       .icon-keyboard_arrow_right
-        position :absolute
-        font-size :12px
+        position: absolute
+        font-size: 12px
         right: 12px
         top: 8px
     .background
-      position :absolute
-      top:0
-      left :0
-      width :100%
-      height :100%
-      z-index: -1
-      filter:blur(10px)
-    .detail
-      position :fixed
+      position: absolute
       top: 0
       left: 0
-      z-index :100
-      width :100%
-      height :100%
-      overflow :auto
-      background :rgba(7,17,27,0.8)
+      width: 100%
+      height: 100%
+      z-index: -1
+      filter: blur(10px)
+    .detail
+      position: fixed
+      top: 0
+      left: 0
+      z-index: 100
+      width: 100%
+      height: 100%
+      overflow: auto
+      background: rgba(7, 17, 27, 0.8)
     .detaill-wrapper
-      min-height :100%
-      width:100%
+      min-height: 100%
+      width: 100%
       .detail-main
-        margin-top :64px
+        margin-top: 64px
         padding-bottom: 64px
         .name
-          font-size :16px
-          line-height :16px
-          text-align:center
-          font-weight:700
+          font-size: 16px
+          line-height: 16px
+          text-align: center
+          font-weight: 700
         .star-wrapper
           margin-top: 18px
           padding: 2px 0
-          text-align:center
+          text-align: center
     .detail-close
-      position :relative
+      position: relative
       width: 32px
-      height :32px
+      height: 32px
       margin: -64px auto 0 auto
-      clear:both
+      clear: both
       font-size: 32px
 
 </style>
