@@ -103,6 +103,16 @@ v-bind:class="表达式"
 
 ## css sticky footer布局
 
-参考
+## 实现star的计算属性
 
+	computed属性
 
+## flex布局实现两边横线中间文字
+
+参考阮一峰的flex文章
+	
+	  <div class="title">
+	    <div class="line"></div>
+	    <div class="text"></div>
+	    <div class="line"></div>
+	  </div>
