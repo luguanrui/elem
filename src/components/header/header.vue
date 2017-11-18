@@ -33,6 +33,7 @@
       <div class="detaill-wrapper clearfix">
         <div class="detail-main">
           <h1 class="name">{{seller.name}}</h1>
+          <star :size="48" :score="seller.score"></star>
         </div>
       </div>
       <div class="detail-close">
@@ -43,6 +44,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import star from 'components/star/star'
   export default{
       props:{
           seller:{
@@ -61,6 +63,9 @@
       },
       created(){
           this.classMap = ['decrease','discount','special','invoice','guarantee']
+      },
+      components:{
+        star
       }
   }
 </script>
