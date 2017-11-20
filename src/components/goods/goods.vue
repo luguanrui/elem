@@ -1,15 +1,15 @@
 <template>
   <div class="goods">
-    <div class="menu-wrapper">
+    <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item,index) in goods" :key="index" class="menu-item">
+        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{'current':currentIndex===index}">
           <span class="text border-1px">
             <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
           </span>
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper">
+    <div class="foods-wrapper food-list-hook" ref="foodsWrapper">
       <ul>
         <li v-for="(item,index) in goods" :key="index" class="food-list">
           <h1 class="title">{{item.name}}</h1>
@@ -49,7 +49,24 @@
     },
     data(){
       return {
-        goods: []
+        goods: [],
+        listHeight:[],
+        scrollY:0
+      }
+    },
+    computed:{
+      currentIndex(){
+          for (let i=0;i<this.listHeight.length;i++){
+              // 获得当前 height的高度
+              let height1=this.listHeight[i];
+              // 获得下一个高度
+              let height2=this.listHeight[i+1];
+              if (!height2 || (this.scrollY > height1 && this.scrollY < height2)){
+                return i;
+              }
+
+          }
+          return 0;
       }
     },
     created(){
@@ -57,8 +74,12 @@
       this.$http.get('/api/goods').then(response => {
         if (response.status === 200) {
           this.goods = response.body;
+
+
           this.$nextTick(()=>{
+            // 首先初始化实现滚动
             this._initScroll();
+            this.calculateHeight();
           })
           //  console.log(this.goods)
         }
@@ -67,11 +88,28 @@
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
     },
     methods:{
+        // 定义初始化scroll
        _initScroll(){
-         const menuWrapper = document.querySelector('.menu-wrapper');
-         const foodsWrapper = document.querySelector('.foods-wrapper');
-         this.menuScroll = new Bscroll(menuWrapper);
-         this.foodsWrapper = new Bscroll(foodsWrapper);
+         this.menuScroll = new Bscroll(this.$refs.menuWrapper,{});
+         this.foodsScroll = new Bscroll(this.$refs.foodsWrapper,{
+             probeType:3 // foods滚动的时候的位置
+         });
+         this.foodsScroll.on('scroll',(pos)=>{
+             this.scrollY = Math.abs(Math.round(pos.y));
+         })
+      },
+      // 计算区间的高度
+      calculateHeight(){
+           console.log(this.$refs.foodsWrapper.getElementsByClassName('food-list-hook'))
+        let foodList = document.querySelector('.food-list-hook');
+        let height = 0;
+        this.listHeight.push(height);
+        for (let i=0;i<foodList.length;i++){
+          let item = foodList[i];
+          height+=item.clientHeight;
+          console.log(item);
+          this.listHeight.push(height);
+        }
       }
     }
   };
