@@ -12,7 +12,7 @@
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
       <div class="content-right">
-        <div class="pay">{{minPrice}}元起送</div>
+        <div class="pay">{{payDesc}}</div>
       </div>
     </div>
   </div>
@@ -32,31 +32,44 @@
       selectFoods: {
         type: Array,
         default(){
-            return [
-              {price:10,
-                count:2
-              }
-            ];
+          return [
+            {
+              price: 20,
+              count: 1
+            }
+          ];
         }
       }
     },
-    computed:{
-        // 计算购买商品的总价
-        totalPrice(){
-            let total = 0;
-            this.selectFoods.forEach((food)=>{
-                total += food.price*food.count;
-            });
-          return total;
-        },
-        // 所选商品的总和
-        totalCount(){
-          let count = 0;
-          this.selectFoods.forEach((food)=>{
-              count += food.count;
-          });
-          return count;
-        }
+    computed: {
+      // 计算购买商品的总价
+      totalPrice(){
+        let total = 0;
+        this.selectFoods.forEach((food) => {
+          total += food.price * food.count;
+        });
+        return total;
+      },
+      // 所选商品的总和
+      totalCount(){
+        let count = 0;
+        this.selectFoods.forEach((food) => {
+          count += food.count;
+        });
+        return count;
+      },
+      // 计算还差多少钱起送
+      payDesc(){
+          if (this.totalPrice === 0){
+            return `￥${this.minPrice}元起送`
+          }else if(this.totalPrice<this.minPrice){
+              let diff = this.minPrice-this.totalPrice;
+              return `还差￥${diff}元起送`
+          }else {
+              return '去结算';
+          }
+      }
+
     }
   }
 </script>
@@ -99,22 +112,22 @@
               font-size: 24px
               color: rgba(255, 255, 255, 0.4)
             &.hightlight
-              background:rgb(0,160,220)
+              background: rgb(0, 160, 220)
               .icon-shopping_cart
                 color: #fff
           .num
-            position:absolute
-            top:0
-            right:0
+            position: absolute
+            top: 0
+            right: 0
             width: 24px
             height: 16px
             line-height: 16px
-            text-align:center
+            text-align: center
             border-radius: 16px
             font-size: 9px
             color: #fff
-            background:rgb(240,20,20)
-            box-shadow:0 4px 8px 0 rgba(0,0,0,0.4)
+            background: rgb(240, 20, 20)
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4)
         .price, .desc
           display: inline-block
           vertical-align: top
