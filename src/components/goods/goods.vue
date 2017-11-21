@@ -36,11 +36,16 @@
         </li>
       </ul>
     </div>
+    <ShopCart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></ShopCart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+
+  // 引入滚动插件
   import Bscroll from 'better-scroll';
+  // 引入购物车组件
+  import ShopCart from '../shopcart/shopcart.vue'
 
   export default {
 
@@ -58,6 +63,11 @@
         listHeight: [],
         scrollY: 0
       }
+    },
+
+    // 组件
+    components:{
+        ShopCart
     },
 
     // 计算属性
