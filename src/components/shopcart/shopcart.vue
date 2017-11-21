@@ -3,28 +3,61 @@
     <div class="content">
       <div class="content-left">
         <div class="logo-wrapper">
-          <div class="logo">
+          <div class="logo" :class="{hightlight:totalCount>0}">
             <span class="icon-shopping_cart"></span>
           </div>
+          <div :class="{num:totalCount>0}">{{totalCount}}</div>
         </div>
-        <div class="price">￥0</div>
+        <div class="price" :class="{hightlight:totalCount>0}">￥{{totalPrice}}</div>
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
-      <div class="content-right">{{minPrice}}元起送</div>
+      <div class="content-right">
+        <div class="pay">{{minPrice}}元起送</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   export default{
-      props:{
-        deliveryPrice: {
-          type: Number,
-        },
-        minPrice: {
-          type: Number,
+    props: {
+      deliveryPrice: {
+        type: Number,
+        default: 0
+      },
+      minPrice: {
+        type: Number,
+        default: 0
+      },
+      selectFoods: {
+        type: Array,
+        default(){
+            return [
+              {price:10,
+                count:2
+              }
+            ];
         }
       }
+    },
+    computed:{
+        // 计算购买商品的总价
+        totalPrice(){
+            let total = 0;
+            this.selectFoods.forEach((food)=>{
+                total += food.price*food.count;
+            });
+          return total;
+        },
+        // 所选商品的总和
+        totalCount(){
+          let count = 0;
+          this.selectFoods.forEach((food)=>{
+              count += food.count;
+          });
+          return count;
+        }
+    }
   }
 </script>
 
@@ -65,6 +98,23 @@
               line-height: 44px
               font-size: 24px
               color: rgba(255, 255, 255, 0.4)
+            &.hightlight
+              background:rgb(0,160,220)
+              .icon-shopping_cart
+                color: #fff
+          .num
+            position:absolute
+            top:0
+            right:0
+            width: 24px
+            height: 16px
+            line-height: 16px
+            text-align:center
+            border-radius: 16px
+            font-size: 9px
+            color: #fff
+            background:rgb(240,20,20)
+            box-shadow:0 4px 8px 0 rgba(0,0,0,0.4)
         .price, .desc
           display: inline-block
           vertical-align: top
@@ -77,6 +127,8 @@
           font-size: 16px
           border-right: 1px solid rgba(255, 255, 255, 0.1)
           font-weight: 700
+          &.hightlight
+            color: #fff
         .desc
           display: inline-block
           margin: 12px 0 0 12px
@@ -84,12 +136,13 @@
       .content-right
         flex: 0 0 105px
         width: 105px
-        margin-top: 12px
-        text-align: center
-        line-height: 24px
-        font-size: 16px
-        color: rgba(255, 255, 255, 0.4)
-        font-weight: 700
+        .pay
+          height: 48px
+          line-height: 48px
+          text-align: center
+          font-size: 12px
+          color: rgba(255, 255, 255, 0.4)
+          font-weight: 700
 
 
 </style>
