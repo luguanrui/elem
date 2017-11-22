@@ -30,6 +30,9 @@
                   <span class="nowPrice">￥{{food.price}}</span>
                   <span v-show="food.oldPrice" class="oldPrice">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrl-wrapper">
+                  <CartContrl :food="food"></CartContrl>
+                </div>
               </div>
             </li>
           </ul>
@@ -44,8 +47,10 @@
 
   // 引入滚动插件
   import Bscroll from 'better-scroll';
-  // 引入购物车组件
+  // 引入购物车组件,并在components注册组件
   import ShopCart from '../shopcart/shopcart.vue'
+  //引入则增加减少按钮组件，并在components注册组件
+  import CartContrl from '../cartcontrl/cartcontrl.vue'
 
   export default {
 
@@ -66,8 +71,9 @@
     },
 
     // 组件
-    components:{
-        ShopCart
+    components: {
+      ShopCart,
+      CartContrl
     },
 
     // 计算属性
@@ -119,7 +125,8 @@
         });
         // 实例化foodsScroll
         this.foodsScroll = new Bscroll(this.$refs.foodsWrapper, {
-          probeType: 3 // foods滚动的时候的位置
+          probeType: 3,// foods滚动的时候的位置
+          click: true //默认是阻止了单击事件,可以使用添加商品按钮
         });
         // 添加滚动监听事件
         this.foodsScroll.on('scroll', (pos) => {
@@ -149,9 +156,9 @@
         // 获取每个food是的li
         let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
         // 获取当前点击menu的DOM元素
-        let el=foodList[index];
+        let el = foodList[index];
         // 使用better-scroll的scrollToElement()[有动画效果]方法实现滚动到相应的foodlist
-        this.foodsScroll.scrollToElement(el,300)
+        this.foodsScroll.scrollToElement(el, 300)
       }
     }
   };
@@ -261,6 +268,10 @@
               text-decoration: line-through
               color: rgb(147, 153, 159)
               font-size: 10px
+          .cartcontrl-wrapper
+            position: absolute
+            right: 0
+            bottom: 12px
 
 
 </style>
