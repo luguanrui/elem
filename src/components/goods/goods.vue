@@ -39,7 +39,7 @@
         </li>
       </ul>
     </div>
-    <ShopCart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></ShopCart>
+    <ShopCart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></ShopCart>
   </div>
 </template>
 
@@ -91,6 +91,18 @@
 
         }
         return 0;
+      },
+      // 向下传递数据：商品的数量
+      selectFoods(){
+        let foods = [];
+        this.goods.forEach((good)=>{
+            good.foods.forEach((food)=>{
+              if (food.count){
+                foods.push(food)
+              }
+            })
+        });
+        return foods;
       }
     },
 
