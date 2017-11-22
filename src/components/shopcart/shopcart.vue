@@ -12,7 +12,7 @@
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
       <div class="content-right">
-        <div class="pay">{{payDesc}}</div>
+        <div class="pay" :class="payClass">{{payDesc}}</div>
       </div>
     </div>
   </div>
@@ -34,13 +34,14 @@
         default(){
           return [
             {
-              price: 20,
-              count: 1
+              price: 10,
+              count: 0
             }
           ];
         }
       }
     },
+    // 计算属性
     computed: {
       // 计算购买商品的总价
       totalPrice(){
@@ -60,14 +61,22 @@
       },
       // 计算还差多少钱起送
       payDesc(){
-          if (this.totalPrice === 0){
-            return `￥${this.minPrice}元起送`
-          }else if(this.totalPrice<this.minPrice){
-              let diff = this.minPrice-this.totalPrice;
-              return `还差￥${diff}元起送`
-          }else {
-              return '去结算';
-          }
+        if (this.totalPrice === 0) {
+          return `￥${this.minPrice}元起送`
+        } else if (this.totalPrice < this.minPrice) {
+          let diff = this.minPrice - this.totalPrice;
+          return `还差￥${diff}元起送`
+        } else {
+          return '去结算';
+        }
+      },
+      // 去结算的class样式
+      payClass(){
+        if (this.totalPrice < this.minPrice) {
+            return 'not-enough'
+        }else {
+            return 'enough'
+        }
       }
 
     }
@@ -156,6 +165,10 @@
           font-size: 12px
           color: rgba(255, 255, 255, 0.4)
           font-weight: 700
-
+          &.not-enough
+            background: #2b333b
+          &.enough
+            background: #00b43c
+            color: #fff
 
 </style>
