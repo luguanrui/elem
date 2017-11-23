@@ -14,7 +14,7 @@
 
 2. mock数据 ;
 	
-	`npm run dev`
+	`npm run mock`
 
 3. 在App.vue中
 		
@@ -93,9 +93,9 @@ v-bind:class="表达式"
 
 给父元素添加属性
 
-	 white-space :nowrap
-	 overflow :hidden
-	 text-overflow ellipsis
+	 white-space:nowrap
+	 overflow:hidden
+	 text-overflow: ellipsis
 
 ## css filter滤镜
 
