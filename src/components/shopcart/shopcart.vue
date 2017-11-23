@@ -1,4 +1,5 @@
 <template>
+  <!--购物车组件-->
   <div class="shopcart">
     <div class="content">
       <div class="content-left">
@@ -13,6 +14,13 @@
       </div>
       <div class="content-right">
         <div class="pay" :class="payClass">{{payDesc}}</div>
+      </div>
+    </div>
+    <div class="ball-container">
+      <div v-for="(ball,index) in balls" :key="index" v-show="ball.show" class="ball-parent">
+        <transition name="ball">
+          <div class="inner"></div>
+        </transition>
       </div>
     </div>
   </div>
@@ -35,6 +43,30 @@
           return [];
         }
       }
+    },
+    data(){
+        return{
+            balls:[
+              {
+                  show:false
+              },
+              {
+                  show:false
+              },
+              {
+                  show:false
+              },
+              {
+                  show:false
+              },
+              {
+                  show:false
+              },
+              {
+                  show:false
+              },
+            ]
+        }
     },
     // 计算属性
     computed: {
@@ -68,9 +100,9 @@
       // 去结算的class样式
       payClass(){
         if (this.totalPrice < this.minPrice) {
-            return 'not-enough'
-        }else {
-            return 'enough'
+          return 'not-enough'
+        } else {
+          return 'enough'
         }
       }
 
@@ -165,5 +197,21 @@
           &.enough
             background: #00b43c
             color: #fff
+
+    .ball-container
+      .ball-parent
+        position:fixed
+        left: 32px
+        bottom: 22px
+        z-index:200
+        transition:all 0.4s
+        .inner
+          width: 16px
+          height: 16px
+          border-radius:50%
+          background:rgb(0,160,28)
+          transition:all 0.4s
+          &.ball-enter-active
+            transition:all 0.4s
 
 </style>

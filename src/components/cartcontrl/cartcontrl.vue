@@ -1,4 +1,5 @@
 <template>
+  <!--购物车控制组件-->
   <div class="cartcontrl">
     <div class="cart-decrease" @click="decreaseCart($event)">
       <transition name="move">

@@ -1,5 +1,7 @@
 <template>
+  <!--商品组件-->
   <div class="goods">
+    <!--左侧分类menu-->
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
         <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{current:currentIndex==index}"
@@ -10,6 +12,7 @@
         </li>
       </ul>
     </div>
+    <!--右侧商品-->
     <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
         <li v-for="(item,index) in goods" :key="index" class="food-list food-list-hook">
@@ -31,6 +34,7 @@
                   <span v-show="food.oldPrice" class="oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrl-wrapper">
+                  <!--购物车控制组件-->
                   <CartContrl :food="food"></CartContrl>
                 </div>
               </div>
@@ -39,6 +43,7 @@
         </li>
       </ul>
     </div>
+    <!--传入购物车组件-->
     <ShopCart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></ShopCart>
   </div>
 </template>
@@ -172,7 +177,10 @@
         // 使用better-scroll的scrollToElement()[有动画效果]方法实现滚动到相应的foodlist
         this.foodsScroll.scrollToElement(el, 300)
       }
-    }
+    },
+
+    // 事件
+
   };
 </script>
 
