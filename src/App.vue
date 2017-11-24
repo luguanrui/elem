@@ -16,7 +16,7 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <!--路由-->
+    <!--路由，通过props属性seller，向子组件中传入数据seller-->
     <router-view :seller="seller"></router-view>
   </div>
 </template>
