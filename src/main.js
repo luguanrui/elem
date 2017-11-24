@@ -32,14 +32,14 @@ const routes = [
 // 实例化路由
 const router = new VueRouter({
   routes,
-  linkActiveClass:'active'
+  linkActiveClass: 'active'
 });
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   template: '<App/>',
-  components: { App },
+  components: {App},
   router
 })
 
