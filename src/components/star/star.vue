@@ -1,3 +1,4 @@
+<!--星星组件-->
 <template>
   <div class="star" :class="starType">
     <span v-for="(itemClass,index) in itemClasses" :key="index" :class="itemClass" class="star-item"></span>
@@ -17,6 +18,7 @@
 
   export default {
 
+    // 通过props属性，接收从header组件中传入props属性，size和score，并定义类型type
     // 外部组建传过来的props对象{size:{},score:{}}需要接受
     props: {
       size: {
@@ -28,13 +30,13 @@
     },
     // 计算属性，
     computed: {
-      // 计算starType()添加样式star-
+      // 动态绑定style传入方法，添加样式star-x做字符串的拼接，确定传入的size
       starType() {
         return 'star-' + this.size
       },
-      //
+      // 计算score，
       itemClasses() {
-        // 定义变量
+        // 定义变量用来初始化结果和存储最后的计算结果
         let result = [];
         // 非整数分数，向下取0.5的整数
         let score = Math.floor(this.score * 2) / 2;
