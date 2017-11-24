@@ -1,9 +1,16 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+/**
+ * 入口文件
+ * 1. 引入相关的依赖，vue，vue-router,vue-resourse
+ * 2. 引入最外层的vue组件，APP.vue
+ * 3. 引入路由相关的组件good，rating，seller
+ * 4. 通过Vue.use()实例化vue-router，vue-resource
+ * 5. 创建路由
+ * 6. 实例化vue
+ */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
-import App from './App'
+import App from './App.vue'
 import Goods from './components/goods/goods.vue'
 import Ratings from './components/ratings/ratings.vue'
 import Seller from './components/seller/seller.vue'
