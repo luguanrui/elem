@@ -1,7 +1,9 @@
+<!--header组件-->
 <template>
   <div class="header">
     <div class="content-wrap">
       <div class="avatar">
+        <!--img通过:src属性来传递数据-->
         <img :src="seller.avatar" alt="" width="64" height="64">
       </div>
       <div class="content">
@@ -13,6 +15,7 @@
           {{seller.description}}/{{seller.deliveryTime}}分钟送达
         </div>
         <div v-if="seller.supports" class="supports">
+          <!--动态绑定style-->
           <span class="icon" :class="classMap[seller.supports[0].type]"></span>
           <span class="text">{{seller.supports[0].description}}</span>
         </div>
@@ -29,11 +32,13 @@
     <div class="background">
       <img :src="seller.avatar" alt="" width="100%" height="100%">
     </div>
+    <!--模态框,通过v-show,定义一个变量,来控制是否显示-->
     <div v-show="detailShow" class="detail">
       <div class="detail-wrapper clearfix">
         <div class="detail-main">
           <h1 class="name">{{seller.name}}</h1>
           <div class="star-wrapper">
+            <!--星星组件,传入size,score两个props属性-->
             <star :size="48" :score="seller.score"></star>
           </div>
           <div class="title">
@@ -65,9 +70,11 @@
 </template>
 
 <script type="text/ecmascript-6">
+  // 获取星星组件
   import star from 'components/star/star'
 
   export default {
+    // 通过props属性，从父组件App中传递数据seller，并定义类型type
     props: {
       seller: {
         type: Object
@@ -75,21 +82,25 @@
     },
     data() {
       return {
+        // 初始化数据模态框的显示
         detailShow: false
       }
     },
     methods: {
+      // 定义单击事件方法，显示模态框
       showDetail() {
         this.detailShow = true
       },
-      // close商品信息的模态框
-      hideDetail(){
+      // 定义单击事件方法，关闭模态框
+      hideDetail() {
         this.detailShow = false
       }
     },
     created() {
+      // 动态绑定style，用于显示小图标
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
     },
+    // 注册星星组件
     components: {
       star
     }
@@ -217,7 +228,7 @@
       height: 100%
       overflow: auto
       background: rgba(7, 17, 27, 0.8)
-      backdrop-filter:blur(10px)
+      backdrop-filter: blur(10px)
     .detail-wrapper
       min-height: 100%
       width: 100%
