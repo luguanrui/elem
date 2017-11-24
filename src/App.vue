@@ -1,5 +1,5 @@
+<!--最外层App组件-->
 <template>
-  <!--最外层APP组件-->
   <div class="app">
     <div class="header">
       <!--header组件，通过props传入数据，seller对象-->
