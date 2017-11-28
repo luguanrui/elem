@@ -35,6 +35,9 @@ const router = new VueRouter({
   linkActiveClass: 'active'
 });
 
+// 默认路由
+router.push(routes[0]);
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
