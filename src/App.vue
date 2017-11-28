@@ -26,6 +26,7 @@
   import header from 'components/header/header.vue'
 
   export default {
+
     data() {
       return {
         // 初始化变量seller
