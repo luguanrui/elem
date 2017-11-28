@@ -1,3 +1,4 @@
+<!--goods组件-->
 <template>
   <!--商品组件-->
   <div class="goods">
@@ -35,7 +36,7 @@
                 </div>
                 <div class="cartcontrl-wrapper">
                   <!--购物车控制组件-->
-                  <CartContrl :food="food"></CartContrl>
+                  <CartContrl :food="food" :bus="bus"></CartContrl>
                 </div>
               </div>
             </li>
@@ -43,8 +44,9 @@
         </li>
       </ul>
     </div>
-    <!--传入购物车组件-->
-    <ShopCart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></ShopCart>
+    <!--购物车组件-->
+    <ShopCart ref="ShopCart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
+              :min-price="seller.minPrice"></ShopCart>
   </div>
 </template>
 
@@ -56,6 +58,7 @@
   import ShopCart from '../shopcart/shopcart.vue'
   //引入则增加减少按钮组件，并在components注册组件
   import CartContrl from '../cartcontrl/cartcontrl.vue'
+  import  Vue from 'vue'
 
   export default {
 
@@ -66,16 +69,18 @@
       }
     },
 
-    // 初始化数据
-    data(){
+    // 初始化数据，goods，lightHeight，scrollY
+    data() {
       return {
         goods: [],
         listHeight: [],
-        scrollY: 0
+        scrollY: 0,
+        // 放入data中子组件才能通过$parent.bus访问到
+        bus:new Vue()
       }
     },
 
-    // 组件
+    // 注册组件ShopCart，CartContrl
     components: {
       ShopCart,
       CartContrl
@@ -84,7 +89,7 @@
     // 计算属性
     computed: {
       // 获取当前foodsList的index
-      currentIndex(){
+      currentIndex() {
         for (let i = 0; i < this.listHeight.length; i++) {
           // 获得当前 height的高度
           let height1 = this.listHeight[i];
@@ -98,21 +103,21 @@
         return 0;
       },
       // 向下传递数据：商品的数量
-      selectFoods(){
+      selectFoods() {
         let foods = [];
-        this.goods.forEach((good)=>{
-            good.foods.forEach((food)=>{
-              if (food.count){
-                foods.push(food)
-              }
-            })
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food)
+            }
+          })
         });
         return foods;
       }
     },
 
     // 生命周期钩子函数
-    created(){
+    created() {
       // 请求数据
       this.$http.get('/api/goods').then(response => {
         if (response.status === 200) {
@@ -129,13 +134,13 @@
         }
       });
       // 左侧menu的item的icon
-      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
     },
 
     // 方法属性
     methods: {
       // 初始化scroll
-      _initScroll(){
+      _initScroll() {
         // 实例化menuScroll
         this.menuScroll = new Bscroll(this.$refs.menuWrapper, {
           click: true //默认是阻止了单击事件
@@ -153,7 +158,7 @@
       },
 
       // 计算区间的高度
-      _calculateHeight(){
+      _calculateHeight() {
         // 获取每个food是的li
         let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
         let height = 0;
@@ -166,7 +171,7 @@
       },
 
       // 左侧menu点击事件,传入event是为了去除浏览器端点击一次触发两次点击事件
-      selectMenu(index, event){
+      selectMenu(index, event) {
         if (!event._constructed) {
           return;
         }
@@ -175,11 +180,17 @@
         // 获取当前点击menu的DOM元素
         let el = foodList[index];
         // 使用better-scroll的scrollToElement()[有动画效果]方法实现滚动到相应的foodlist
-        this.foodsScroll.scrollToElement(el, 300)
-      }
+        this.foodsScroll.scrollToElement(el, 300);
+      },
     },
 
-    // 事件
+    // 事件，接受'cart.add'
+//    events:{
+//      'cart.add'(target){
+//        // 定义方法处理target
+//        this._drop(target)
+//      }
+//    }
 
   };
 </script>

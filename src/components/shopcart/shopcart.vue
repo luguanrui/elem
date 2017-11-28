@@ -17,17 +17,18 @@
       </div>
     </div>
     <div class="ball-container">
-      <div v-for="(ball,index) in balls" :key="index" v-show="ball.show" class="ball-parent">
-        <transition name="ball">
-          <div class="inner"></div>
-        </transition>
-      </div>
+      <transition-group name="drop" tag="div" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:after-enter="afterEnter">
+        <div v-for="(ball,index) in balls" :key="index" v-show="ball.show" class="ball">
+          <div class="inner inner-hook"></div>
+        </div>
+      </transition-group>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  export default{
+  import Vue from 'vue'
+  export default {
     props: {
       deliveryPrice: {
         type: Number,
@@ -39,39 +40,38 @@
       },
       selectFoods: {
         type: Array,
-        default(){
+        default() {
           return [];
         }
       }
     },
-    data(){
-        return{
-            balls:[
-              {
-                  show:false
-              },
-              {
-                  show:false
-              },
-              {
-                  show:false
-              },
-              {
-                  show:false
-              },
-              {
-                  show:false
-              },
-              {
-                  show:false
-              },
-            ]
-        }
+    data() {
+      return {
+        balls: [
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          }
+        ],
+        dropBalls: [],
+        bus: new Vue()
+      }
     },
     // 计算属性
     computed: {
       // 计算购买商品的总价
-      totalPrice(){
+      totalPrice() {
         let total = 0;
         this.selectFoods.forEach((food) => {
           total += food.price * food.count;
@@ -79,7 +79,7 @@
         return total;
       },
       // 所选商品的总和
-      totalCount(){
+      totalCount() {
         let count = 0;
         this.selectFoods.forEach((food) => {
           count += food.count;
@@ -87,7 +87,7 @@
         return count;
       },
       // 计算还差多少钱起送
-      payDesc(){
+      payDesc() {
         if (this.totalPrice === 0) {
           return `￥${this.minPrice}元起送`
         } else if (this.totalPrice < this.minPrice) {
@@ -98,7 +98,7 @@
         }
       },
       // 去结算的class样式
-      payClass(){
+      payClass() {
         if (this.totalPrice < this.minPrice) {
           return 'not-enough'
         } else {
@@ -106,6 +106,76 @@
         }
       }
 
+    },
+    // 方法属性
+    methods: {
+      //小球掉落的方法
+      drop: function(el){
+        for(let i = 0; i < this.balls.length; i++){
+          let ball = this.balls[i];
+          //找到一个隐藏的小球
+          //把el赋给它。并填入dropBall中
+          if( !ball.show ){
+            ball.show = true;
+            ball.el = el;
+            this.dropBalls.push(ball);
+            return;
+          }
+        }
+      },
+      //进入动画前
+      beforeEnter: function(el){
+        let count = this.balls.length;
+        while (count--){
+          let ball = this.balls[count];
+          //获得show=true小球对应的el的相对于视口的位置
+          if (ball.show === true){
+            let rect = ball.el.getBoundingClientRect();
+            //小球起始点x,y与终点(购物车)的差值
+            let x = rect.left - 32;
+            let y = -(window.innerHeight - rect.top - 22);
+            el.style.display = '';
+            //外层元素做一个纵向的动画
+            el.style.webkitTransform = `translate3d(0, ${y}px, 0)`;
+            el.style.transform = `translate3d(0, ${y}px, 0)`;
+            //内部元素做一个横向动画
+            let inner = el.getElementsByClassName("inner-hook")[0];
+            inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`;
+            inner.style.transform = `translate3d(${x}px, 0, 0)`;
+          }
+        }
+      },
+      //小球进入动画时
+      enter: function(el){
+        //重绘
+        let rf = el.offsetHeight;
+        this.$nextTick( () => {
+          el.style.display = '';
+          //外层元素做一个纵向的动画
+          el.style.webkitTransform = 'translate3d(0, 0, 0)';
+          el.style.transform = 'translate3d(0, 0, 0)';
+          //内部元素做一个横向动画
+          let inner = el.getElementsByClassName("inner-hook")[0];
+          inner.style.webkitTransform = 'translate3d(0, 0, 0)';
+          inner.style.transform = 'translate3d(0, 0, 0)';
+        } )
+      },
+      //动画做完后
+      //重置。小球又能重新用了
+      afterEnter: function(el){
+        let  ball = this.dropBalls.shift();
+        if (ball){
+          ball.show = false;
+          el.style.display = 'none';
+        }
+      },
+    },
+    // 生命周期
+    created() {
+      //在整个goods页面下,shopcart和cartcontrol是兄弟
+      this.$parent.bus.$on('cart-add', this.drop);
+      //在shopcart中,shopcart是cartcontrol的父节点
+      this.bus.$on('cart-add', this.drop)
     }
   }
 </script>
@@ -197,21 +267,19 @@
           &.enough
             background: #00b43c
             color: #fff
-
     .ball-container
-      .ball-parent
-        position:fixed
-        left: 32px
+      .ball
+        position: fixed
+        left:32px
         bottom: 22px
-        z-index:200
-        transition:all 0.4s
-        .inner
-          width: 16px
-          height: 16px
-          border-radius:50%
-          background:rgb(0,160,28)
-          transition:all 0.4s
-          &.ball-enter-active
-            transition:all 0.4s
+        z-index: 50
+        &.drop-enter-active
+          transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+          .inner
+            width: 16px
+            height: 16px
+            border-radius: 50%
+            background-color: rgb(0, 160, 220)
+            transition: all 0.4s linear
 
 </style>
