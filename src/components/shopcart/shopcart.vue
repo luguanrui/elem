@@ -1,7 +1,8 @@
+<!--购物车组件-->
 <template>
-  <!--购物车组件-->
   <div class="shopcart">
-    <div class="content">
+    <!--购物车内容-->
+    <div class="content" @click="toggleList">
       <div class="content-left">
         <div class="logo-wrapper">
           <div class="logo" :class="{hightlight:totalCount>0}">
@@ -12,22 +13,53 @@
         <div class="price" :class="{hightlight:totalCount>0}">￥{{totalPrice}}</div>
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
-      <div class="content-right">
+      <div class="content-right" @click.stop.prevent="pay">
         <div class="pay" :class="payClass">{{payDesc}}</div>
       </div>
     </div>
+    <!--购物车小球-->
     <div class="ball-container">
-      <transition-group name="drop" tag="div" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:after-enter="afterEnter">
+      <transition-group name="drop" tag="div" v-on:before-enter="beforeEnter" v-on:enter="enter"
+                        v-on:after-enter="afterEnter">
         <div v-for="(ball,index) in balls" :key="index" v-show="ball.show" class="ball">
           <div class="inner inner-hook"></div>
         </div>
       </transition-group>
     </div>
+    <!--购物车列表-->
+    <transition name="fold">
+      <div class="shopcart-list" v-show="listShow">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty" @click="empty">清空</span>
+        </div>
+        <div class="list-content" ref="listContent">
+          <ul>
+            <li class="food" v-for="(food,index) in selectFoods" :key="index">
+              <span class="name">{{food.name}}</span>
+              <div class="price">
+                <span class="">￥{{food.price * food.count}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <CartContrl :food="food"></CartContrl>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
+    <!--模糊背景-->
+    <transition name="fade">
+      <div class="list-mask" v-show="listShow" @click="hideList"></div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Vue from 'vue'
+  import CartContrl from '../cartcontrl/cartcontrl.vue'
+  import BScroll from 'better-scroll'
+
   export default {
     props: {
       deliveryPrice: {
@@ -65,7 +97,9 @@
           }
         ],
         dropBalls: [],
-        bus: new Vue()
+        bus: new Vue(),
+        // 购物车列表默认隐藏
+        fold: true,
       }
     },
     // 计算属性
@@ -104,18 +138,39 @@
         } else {
           return 'enough'
         }
-      }
+      },
+      // 购物车列表的显示控制
+      listShow() {
+        if (!this.totalCount) {
+          this.fold = true;
+          return false;
+        }
+        let show = !this.fold;
+        if (show) {
+          // 使组件中的增加减少按钮生效
+          this.$nextTick(() => {
+            if (!this.scroll) {
+              this.scroll = new BScroll(this.$refs.listContent, {
+                click: true
+              })
+            } else {
+              this.scroll.refresh();
+            }
+          })
+        }
+        return show;
+      },
 
     },
     // 方法属性
     methods: {
       //小球掉落的方法
-      drop: function(el){
-        for(let i = 0; i < this.balls.length; i++){
+      drop: function (el) {
+        for (let i = 0; i < this.balls.length; i++) {
           let ball = this.balls[i];
           //找到一个隐藏的小球
           //把el赋给它。并填入dropBall中
-          if( !ball.show ){
+          if (!ball.show) {
             ball.show = true;
             ball.el = el;
             this.dropBalls.push(ball);
@@ -124,12 +179,12 @@
         }
       },
       //进入动画前
-      beforeEnter: function(el){
+      beforeEnter: function (el) {
         let count = this.balls.length;
-        while (count--){
+        while (count--) {
           let ball = this.balls[count];
           //获得show=true小球对应的el的相对于视口的位置
-          if (ball.show === true){
+          if (ball.show === true) {
             let rect = ball.el.getBoundingClientRect();
             //小球起始点x,y与终点(购物车)的差值
             let x = rect.left - 32;
@@ -146,10 +201,10 @@
         }
       },
       //小球进入动画时
-      enter: function(el){
+      enter: function (el) {
         //重绘
         let rf = el.offsetHeight;
-        this.$nextTick( () => {
+        this.$nextTick(() => {
           el.style.display = '';
           //外层元素做一个纵向的动画
           el.style.webkitTransform = 'translate3d(0, 0, 0)';
@@ -158,17 +213,41 @@
           let inner = el.getElementsByClassName("inner-hook")[0];
           inner.style.webkitTransform = 'translate3d(0, 0, 0)';
           inner.style.transform = 'translate3d(0, 0, 0)';
-        } )
+        })
       },
       //动画做完后
       //重置。小球又能重新用了
-      afterEnter: function(el){
-        let  ball = this.dropBalls.shift();
-        if (ball){
+      afterEnter: function (el) {
+        let ball = this.dropBalls.shift();
+        if (ball) {
           ball.show = false;
           el.style.display = 'none';
         }
       },
+      // 购物车列表单机事件
+      toggleList() {
+        if (!this.totalCount) {
+          return;
+        }
+        this.fold = !this.fold;
+      },
+      // 清空购物车列表
+      empty() {
+        this.selectFoods.forEach((food) => {
+          food.count = 0;
+        })
+      },
+      // 模糊背景
+      hideList() {
+        this.fold = true;
+      },
+      // 去结算
+      pay() {
+        if (this.totalPrice < this.minPrice) {
+          return;
+        }
+        window.alert(`支付${this.totalPrice}`)
+      }
     },
     // 生命周期
     created() {
@@ -176,11 +255,16 @@
       this.$parent.bus.$on('cart-add', this.drop);
       //在shopcart中,shopcart是cartcontrol的父节点
       this.bus.$on('cart-add', this.drop)
+    },
+    // 注册组件
+    components: {
+      CartContrl
     }
   }
 </script>
 
 <style lang="stylus">
+  @import "../../common/stylus/mixin.styl"
   .shopcart
     position: fixed
     left: 0
@@ -270,7 +354,7 @@
     .ball-container
       .ball
         position: fixed
-        left:32px
+        left: 32px
         bottom: 22px
         z-index: 50
         &.drop-enter-active
@@ -282,4 +366,70 @@
             background-color: rgb(0, 160, 220)
             transition: all 0.4s linear
 
+    .shopcart-list
+      position: absolute
+      left: 0
+      top: 0
+      z-index: -1
+      width: 100%
+      transform: translate3d(0, -100%, 0)
+      &.fold-enter-active, &.fold-leave-active
+        transition: all 0.5s
+      &.fold-enter, &.fold-enter-active
+        tranform: translate3d(0, 0, 0)
+      .list-header
+        height: 40px
+        line-height: 40px
+        padding: 0 18px
+        background-color: #f3f5f7
+        border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+        .title
+          float: left
+          font-size: 14px
+          color: rgb(7, 17, 27)
+        .empty
+          float: right
+          font-size: 12px
+          color: rgb(0, 160, 220)
+      .list-content
+        padding: 0 18px
+        max-height: 217px //超过该高度不再无限增高
+        background-color: #fff
+        overflow: hidden
+        .food
+          position: relative
+          padding: 12px 0
+          box-sizing: border-box
+          border-1px: rgba(7, 17, 27, 0.1)
+          .name
+            line-height: 24px
+            height: 24px
+            font-size: 14px
+            color: rgb(7, 17, 27)
+          .price
+            position: absolute
+            bottom: 12px
+            right: 90px
+            line-height: 24px
+            font-size: 14px
+            font-weight: 700
+            color: rgb(240, 20, 20)
+          .cartcontrol-wrapper
+            position: absolute
+            right: 0
+            bottom: 5px
+    .list-mask
+      position: fixed
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      z-index: -10
+      background-color: rgba(7, 17, 27, 0.6)
+      backdrop-filter: blur(10px)
+      &.fade-enter-active, &.fade-leave-active
+        transition: all 0.5s
+      &.fade-enter, &.fade-leave-active
+        opacity: 0
+        background-color: rgba(7, 17, 27, 0)
 </style>
