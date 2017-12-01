@@ -19,7 +19,8 @@
         <li v-for="(item,index) in goods" :key="index" class="food-list food-list-hook">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li v-for="(food,index) in item.foods" :key="index" class="food-item border-1px">
+            <li @click="selectFood(food,$event)" v-for="(food,index) in item.foods" :key="index"
+                class="food-item border-1px">
               <div class="icon">
                 <img :src="food.icon" alt="" width="57" height="57">
               </div>
@@ -47,6 +48,8 @@
     <!--购物车组件-->
     <ShopCart ref="ShopCart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
               :min-price="seller.minPrice"></ShopCart>
+    <!--商品详情-->
+    <Food :food="selectedFood" ref="food"></Food>
   </div>
 </template>
 
@@ -56,9 +59,11 @@
   import Bscroll from 'better-scroll';
   // 引入购物车组件,并在components注册组件
   import ShopCart from '../shopcart/shopcart.vue'
-  //引入则增加减少按钮组件，并在components注册组件
+  // 引入则增加减少按钮组件，并在components注册组件
   import CartContrl from '../cartcontrl/cartcontrl.vue'
-  import  Vue from 'vue'
+  import Vue from 'vue'
+  // 引入商品详情组件
+  import Food from '../food/food.vue'
 
   export default {
 
@@ -76,14 +81,17 @@
         listHeight: [],
         scrollY: 0,
         // 放入data中子组件才能通过$parent.bus访问到
-        bus:new Vue()
+        bus: new Vue(),
+        // 将数据传递给food组件 :food
+        selectedFood: {}
       }
     },
 
     // 注册组件ShopCart，CartContrl
     components: {
       ShopCart,
-      CartContrl
+      CartContrl,
+      Food
     },
 
     // 计算属性
@@ -182,16 +190,17 @@
         // 使用better-scroll的scrollToElement()[有动画效果]方法实现滚动到相应的foodlist
         this.foodsScroll.scrollToElement(el, 300);
       },
+
+      // 点击商品显示商品详情,通过点击事件，给selectedFood传入当前选中的li的详情food
+      selectFood(food, event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.selectedFood = food;
+        // 通过在子组件food中定义一个方法属性show方法来显示food，使用ref属性
+        this.$refs.food.show();
+      },
     },
-
-    // 事件，接受'cart.add'
-//    events:{
-//      'cart.add'(target){
-//        // 定义方法处理target
-//        this._drop(target)
-//      }
-//    }
-
   };
 </script>
 
