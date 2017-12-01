@@ -1,3 +1,4 @@
+<!--分割线-->
 <template>
   <div class="split"></div>
 </template>
@@ -7,7 +8,6 @@
 </script>
 
 <style lang="stylus">
-  @import '../../common/stylus/mixin.styl'
   .split
     width: 100%
     height: 16px
