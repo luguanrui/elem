@@ -12,7 +12,7 @@ export function saveToLocal(id, key, value) {
     }
   }
   seller[id][key] = value;
-  window.localStorage._seller_ = JSON.parse(seller);
+  window.localStorage._seller_ = JSON.stringify(seller);
 
 }
 
