@@ -2,20 +2,20 @@
 <template>
   <div class="ratingselect">
     <div class="rating-type border-1px">
-      <span @click="select(2,$event)" class="block positive" :class="{active:selectType1 === 2}">
+      <span @click="select(2,$event)" class="block positive" :class="{'active':selectType1 === 2}">
         {{desc.all}}
         <span class="count">{{ratings.length}}</span>
       </span>
-      <span @click="select(0,$event)" class="block positive" :class="{active:selectType1 === 0}">
+      <span @click="select(0,$event)" class="block positive" :class="{'active':selectType1 === 0}">
         {{desc.positive}}
         <span class="count">{{positives.length}}</span>
       </span>
-      <span @click="select(1,$event)" class="block negative" :class="{active:selectType1 === 1}">
+      <span @click="select(1,$event)" class="block negative" :class="{'active':selectType1 === 1}">
         {{desc.negative}}
         <span class="count">{{negatives.length}}</span>
       </span>
     </div>
-    <div @click="toggleContent($event)" class="switch" :class="{on:onlyContent1}">
+    <div @click="toggleContent($event)" class="switch" :class="{'on':onlyContent1}">
       <span class="icon-check_circle"></span>
       <span class="text">只看有内容的评价</span>
     </div>
@@ -81,7 +81,7 @@
         }
         this.selectType1 = type;
         // 通知父组件发生变化,父组件通过$on来监听子组件的变化
-        this.$parent.bus.$emit('ratingtype-select', type);
+        this.$parent.bus.$emit('ratingselect-type', type);
       },
       // 切换
       toggleContent(event) {
@@ -89,7 +89,7 @@
           return;
         }
         this.onlyContent1 = !this.onlyContent1;
-//        this.$parent.bus.$emit('content-toggle', this.onlyContent1);
+        this.$parent.bus.$emit('content-toggle', this.onlyContent1);
       }
     }
   }
@@ -134,8 +134,8 @@
         .icon-check_circle
           color: #00c850
       .icon-check_circle
-        display :inline-block
-        vertical-align :top
+        display: inline-block
+        vertical-align: top
         margin-right: 4px
         font-size: 24px
       .text
