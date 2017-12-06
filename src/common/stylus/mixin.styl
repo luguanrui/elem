@@ -1,9 +1,9 @@
 // 1px
 border-1px($color)
-  position:relative
+  position: relative
   &:after
     display: block
-    position:absolute
+    position: absolute
     left: 0
     bottom: 0
     width: 100%
@@ -12,11 +12,11 @@ border-1px($color)
 
 // 不添加1px
 border-none()
-    &:after
-      display:none
+  &:after
+    display: none
 
 // 背景
 bg-image($url)
-  background-image:url($url+"@2x.png")
-  @media (-webkit-min-device-pixel-ratio:3),(min-device-pixel-ratio:3)
-    background-image:url($url+"@3x.png")
+  background-image: url($url + "@2x.png")
+  @media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3)
+    background-image: url($url + "@3x.png")
