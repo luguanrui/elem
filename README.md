@@ -1,21 +1,23 @@
-# myproject
+### 安装
 
-> A Vue.js project
+	git clone git@github.com:luguanrui/elem.git
+	
+	cd elem 
+	
+	npm install 
+	
+	node mock/server.js
+	
+	npm start
+	
 
-## Build Setup
+### 技术实现
 
-``` bash
-# install dependencies
-npm install
+* vue2.0
+* vue-router
+* better-scroll
+* stylus
+* koa
+* koa-router 	
 
-# serve with hot reload at localhost:8080
-npm run dev
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
